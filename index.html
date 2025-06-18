@@ -1,0 +1,51 @@
+﻿<html lang="nl">
+<head>
+    <meta charset="UTF-8" />
+    <title>DMND Scroll Page</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div include-html="components/topbar.html"></div>
+    <div class="slider-container">
+        <div include-html="components/section0.html"></div>
+        <div include-html="components/section1.html"></div>
+        <div include-html="components/section2.html"></div>
+        <div include-html="components/section3.html"></div>
+        <div include-html="components/section4.html"></div>
+        <div include-html="components/section5.html"></div>
+    </div>
+    <div include-html="components/indicators.html"></div>
+    <script src="main.js"></script>
+    <script>
+        // HTML include script mét callback voor initialisatie
+        function includeHTML(callback) {
+            const elements = document.querySelectorAll('[include-html]');
+            let left = elements.length;
+            if (left === 0) {
+                if (typeof callback === 'function') callback();
+                return;
+            }
+            elements.forEach(el => {
+                const file = el.getAttribute('include-html');
+                fetch(file)
+                    .then(resp => resp.text())
+                    .then(data => {
+                        el.innerHTML = data;
+                        el.removeAttribute('include-html');
+                        // recursief zoeken naar nieuwe includes (nested)
+                        includeHTML(() => {
+                            left--;
+                            if (left === 0 && typeof callback === 'function') callback();
+                        });
+                    });
+            });
+        }
+        // Roep na includen alle componenten direct initPage() aan
+        includeHTML(function() {
+            if (typeof initPage === 'function') {
+                initPage();
+            }
+        });
+    </script>
+</body>
+</html>

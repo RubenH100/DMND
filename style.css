@@ -1,0 +1,373 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #000;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+}
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 90px;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+.topbar-content {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+}
+.logo-area {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.logo-area img {
+    height: 64px;
+    width: auto;
+    display: block;
+}
+.topbar-links {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+}
+.topbar-link {
+    color: #000;
+    font-size: 24px;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 10px 22px;
+    border-radius: 3px;
+    background: none;
+    border: none;
+    transition: color 0.18s, text-decoration 0.18s;
+}
+.topbar-link:hover {
+    color: #E5F5CC;
+    text-decoration: underline;
+}
+.slider-container {
+    position: absolute;
+    top: 90px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 90px);
+    overflow: hidden;
+    z-index: 1;
+}
+.section {
+    position: absolute;
+    width: 100vw;
+    height: calc(100vh - 90px);
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    font-size: 1.5em;
+    color: #000;
+    background: #fff;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 1;
+    transition: none;
+    transform: translateY(100vh);
+    text-align: center;
+    overflow: visible;
+}
+/* Verbeterde animatieklassen voor beide richtingen */
+.section.slide-in-from-top,
+.section.slide-in-from-bottom,
+.section.slide-out-to-top,
+.section.slide-out-to-bottom,
+.section.active {
+    transition: transform 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.5s;
+}
+.section.active,
+.section.slide-in-from-top,
+.section.slide-in-from-bottom {
+    opacity: 1;
+    z-index: 2;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+.section.slide-in-from-top {
+    /* Binnenkomen van boven */
+    transform: translateY(-100vh);
+    opacity: 1;
+}
+.section.slide-in-from-bottom {
+    /* Binnenkomen van onder */
+    transform: translateY(100vh);
+    opacity: 1;
+}
+.section.slide-out-to-top {
+    /* Weggaan naar boven */
+    transform: translateY(-100vh);
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+.section.slide-out-to-bottom {
+    /* Weggaan naar beneden */
+    transform: translateY(100vh);
+    opacity: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+#section0 {
+    transform: translateY(-100vh);
+    flex-direction: column;
+}
+.left, .right {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 40px;
+    position: relative; /*Belangrijk: dit zorgt dat de box-shadow over de rand kan vallen */
+}
+.right.green {
+    width: 33.33%;
+    background: #E5F5CC;
+    position: relative;
+    z-index: 2;
+    box-shadow: -8px 0 20px -2px rgba(0,0,0,0.15);
+}
+.left.white {
+    width: 66.66%;
+    background: #fff;
+    position: relative;
+    z-index: 1;
+    margin-right: -8px;
+    box-shadow: none;
+    align-items: flex-start;
+}
+.left.green {
+    width: 33.33%;
+    background: #E5F5CC;
+    position: relative;
+    z-index: 2;
+    box-shadow: 8px 0 20px -2px rgba(0,0,0,0.15);
+}
+.right.white {
+    width: 66.66%;
+    background: #fff;
+    position: relative;
+    z-index: 1;
+}
+
+.right.white h1, .left.white h1,
+.right.white h2, .left.white h2,
+.right.white h3, .left.white h3,
+.right.white h4, .left.white h4,
+.right.white h5, .left.white h5,
+.right.white h6  .left.white h6{
+    text-align: center;
+    align-self: center;
+}
+.right.white p, .left.white p,
+.right.white li, .left.white li {
+    max-width: 800px;
+    text-align: left;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    color: #333;
+    padding: 0 20px;
+    margin-top: 10px;
+    align-self: center;
+}
+
+/* Schaduw aan de rechterzijde van het groene vlak */
+.shadow-right {
+    box-shadow: 3px 0 10px rgba(0,0,0,0.1);
+}
+/* Schaduw aan de linkerzijde van het groene vlak */
+.shadow-left {
+    box-shadow: -3px 0 10px rgba(0,0,0,0.1);
+}
+
+.indicator-wrapper {
+    position: fixed;
+    top: 50%;
+    right: 40px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    z-index: 1000;
+}
+.circle {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #000;
+    background: #fff;
+    transition: background 0.3s, border 0.3s;
+    cursor: pointer;
+}
+.circle.active {
+    background: #287233;
+    border: 2px solid #287233;
+}
+.circle:not(.active):hover {
+    background: #287233;
+    border: 2px solid #287233;
+}
+.tooltip {
+    visibility: hidden;
+    opacity: 0;
+    background: #000;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 3px 10px;
+    position: absolute;
+    right: 120%;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    font-size: 14px;
+    z-index: 1001;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    box-shadow: 0 0 12px 4px #B6BE00;
+}
+.circle:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+.dmnd-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    color: #000;
+    margin-top: -150px;
+    margin-bottom: 0.3em;
+}
+.dmnd-slogan {
+    font-size: 1em;
+    color: #000;
+    font-style: italic;
+    opacity: 0.7;
+}
+.dmnd-description {
+    max-width: 800px;
+    text-align: center;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    color: #333;
+    padding: 0 20px;
+    margin-top: 40px;
+    align-self: center;
+}
+.logo-img {
+    width: 20vw;
+    height: auto;
+}
+@media (max-width: 900px) {
+    .topbar-content {
+        gap: 24px;
+    }
+    .logo-area img {
+        height: 40px;
+    }
+    .topbar-link {
+        font-size: 16px;
+        padding: 6px 12px;
+    }
+    .section {
+        flex-direction: column;
+        font-size: 1em;
+    }
+    .left, .right {
+        width: 100%;
+        height: 50%;
+        box-shadow: none !important;
+    }
+    .logo-img {
+        width: 40vw;
+    }
+}
+
+#section0 {
+    position: relative;
+    overflow: hidden;
+}
+.background-blur{
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: url('pictures/background2.avif') right bottom no-repeat;
+    background-size: 62% auto;
+    filter: blur(1px);
+    z-index: 0;
+    pointer-events: none;
+}
+#section0> *:not(.background-blur){
+    position: relative;
+    z-index: 1;
+}
+
+.center-vertical {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; /* Voor horizontale centrering */
+    height: 100%;
+    width: 100%;
+}
+
+.feature-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    width: 100%;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.feature-card{
+    background: #E5F5CC;
+    color: #000;
+    font-size: 1.05em;
+    padding: 22px 30px;
+    border-radius: 17px;
+    box-shadow: 0 2px 8px rgba(182,190,0,0.12);
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    letter-spacing: 0.01em;
+}
+
+.feature-cards.feature-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+    max-width: 700px;
+}
+.feature-cards.feature-cards-grid .feature-card {
+    min-height: 170px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: #E5F5CC;
+    border-radius: 17px;
+    box-shadow: 0 2px 8px rgba(182,190,0,0.12);
+    color: #000;
+    padding: 28px 18px;
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+}
