@@ -1,40 +1,52 @@
-<!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DMND Budgai</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>DMND Scroll Page</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="scaled-wrapper">
-        <div include-html="components/topbar.html"></div>
-        <div class="slider-container">
-            <div include-html="components/section0.html"></div>
-            <div include-html="components/section1.html"></div>
-            <div include-html="components/section2.html"></div>
-            <div include-html="components/section3.html"></div>
-            <div include-html="components/section4.html"></div>
-            <div include-html="components/section5.html"></div>
-        </div>
-        <div include-html="components/indicators.html"></div>
+    <div include-html="components/topbar.html"></div>
+    <div class="slider-container">
+        <div include-html="components/section0.html"></div>
+        <div include-html="components/section1.html"></div>
+        <div include-html="components/section2.html"></div>
+        <div include-html="components/section3.html"></div>
+        <div include-html="components/section4.html"></div>
+        <div include-html="components/section5.html"></div>
     </div>
-    <script src="main.js"></script>
+    <div include-html="components/indicators.html"></div>
+    <script src="main.js"></script>r
     <script>
-        // Schaal de hele pagina automatisch zodat de 'viewport' altijd past
-        const BASE_WIDTH = 2560;
-        const BASE_HEIGHT = 1440;
-        function scaleWrapper() {
-            const ww = window.innerWidth;
-            const wh = window.innerHeight;
-            const scale = Math.min(ww / BASE_WIDTH, wh / BASE_HEIGHT);
-            const wrapper = document.querySelector('.scaled-wrapper');
-            if (wrapper) {
-                wrapper.style.transform = `translate(-50%, -50%) scale(${scale})`;
+        // HTML include script mét callback voor initialisatie
+        function includeHTML(callback) {
+            const elements = document.querySelectorAll('[include-html]');
+            let left = elements.length;
+            if (left === 0) {
+                if (typeof callback === 'function') callback();
+                return;
             }
+            elements.forEach(el => {
+                const file = el.getAttribute('include-html');
+                fetch(file)
+                    .then(resp => resp.text())
+                    .then(data => {
+                        el.innerHTML = data;
+                        el.removeAttribute('include-html');
+                        // recursief zoeken naar nieuwe includes (nested)
+                        includeHTML(() => {
+                            left--;
+                            if (left === 0 && typeof callback === 'function') callback();
+                        });
+                    });
+            });
         }
-        window.addEventListener('resize', scaleWrapper);
-        window.addEventListener('DOMContentLoaded', scaleWrapper);
+        // Roep na includen alle componenten direct initPage() aan
+        includeHTML(function() {
+            if (typeof initPage === 'function') {
+                initPage();
+            }
+        });
     </script>
 </body>
 </html>
