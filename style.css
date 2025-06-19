@@ -316,7 +316,7 @@
 .background-blur{
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
-    background: url('pictures/Background_Green.png') right top no-repeat;
+    background: url('pictures/Background_Green.png') right bottom no-repeat;
     background-size: 62% auto;
     filter: blur(1px);
     z-index: 0;
