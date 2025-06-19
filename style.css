@@ -51,7 +51,7 @@ body {
     transition: color 0.18s, text-decoration 0.18s;
 }
 .topbar-link:hover {
-    color: #E5F5CC;
+    color: #287233;
     text-decoration: underline;
 }
 .slider-container {
@@ -242,7 +242,7 @@ body {
     z-index: 1001;
     transition: opacity 0.3s;
     pointer-events: none;
-    box-shadow: 0 0 12px 4px #B6BE00;
+    box-shadow: 0 0 12px 4px #287233;
 }
 .circle:hover .tooltip {
     visibility: visible;
