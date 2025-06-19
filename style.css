@@ -1,10 +1,18 @@
-body {
+@font-face {
+    font-family: 'Cascadia Code';
+    src: url('fonts/CascadiaCode.woff2') format('woff2'),
+         url('fonts/CascadiaCode.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}body {
     margin: 0;
     padding: 0;
     background: #fff;
     color: #000;
     font-family: Arial, sans-serif;
     overflow: hidden;
+    font-family: 'Cascadia Code', Consolas, 'Liberation Mono', Menlo, monospace;
 }
 .topbar {
     position: fixed;
@@ -308,7 +316,7 @@ body {
 .background-blur{
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
-    background: url('pictures/background2.avif') right bottom no-repeat;
+    background: url('pictures/Background_Green.png') right top no-repeat;
     background-size: 62% auto;
     filter: blur(1px);
     z-index: 0;
@@ -347,7 +355,8 @@ body {
     max-width: 800px;
     width: 100%;
     text-align: center;
-    font-family: Arial, sans-serif;
+    /*font-family: Arial, sans-serif;*/
+    font-family: 'Cascadia Code', Consolas, 'Liberation Mono', Menlo, monospace;
     letter-spacing: 0.01em;
 }
 
