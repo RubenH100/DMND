@@ -1,4 +1,20 @@
 
+// ========== BEGIN: Auto-scale functionaliteit ==========
+const BASE_WIDTH = 2560;
+const BASE_HEIGHT = 1440;
+function scaleWrapper() {
+    const ww = window.innerWidth;
+    const wh = window.innerHeight;
+    // Bereken schaalfactor zodat alles altijd zichtbaar blijft
+    const scale = Math.min(ww / BASE_WIDTH, wh / BASE_HEIGHT);
+    const wrapper = document.querySelector('.scaled-wrapper');
+    if (wrapper) {
+        wrapper.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    }
+}
+window.addEventListener('resize', scaleWrapper);
+window.addEventListener('DOMContentLoaded', scaleWrapper);
+// ========== EINDE: Auto-scale functionaliteit ==========
 // Zet current standaard op 0 zodat section0 altijd als eerste verschijnt
 let current = 0;
 const max = 5;
@@ -58,7 +74,7 @@ function slideToSection(target) {
         isTransitioning = false;
     }, 500); // css transition-duur
 }
-// Let op: deze listeners moet je ALTIJD toevoegen OOK als je initPage pas na includes uitvoert
+// Listeners voor scroll, toetsen en indicatoren
 window.addEventListener('wheel', function (e) {
     if (isTransitioning) { e.preventDefault(); return; }
     if (e.deltaY > 0 && current < max) slideToSection(current + 1);
@@ -75,7 +91,7 @@ window.addEventListener('keydown', function (e) {
         e.preventDefault();
     }
 });
-// Init-functie die PAS wordt aangeroepen als alle includes klaar zijn!
+// Init-functie die na alle includes klaar is!
 function initPage() {
     current = 0;
     for (let i = 0; i <= max; i++) {
@@ -101,4 +117,32 @@ function initPage() {
     }
     document.getElementById('logo-click')?.addEventListener('click', () => slideToSection(0));
 }
-
+// HTML include script mét callback voor initialisatie
+function includeHTML(callback) {
+    const elements = document.querySelectorAll('[include-html]');
+    let left = elements.length;
+    if (left === 0) {
+        if (typeof callback === 'function') callback();
+        return;
+    }
+    elements.forEach(el => {
+        const file = el.getAttribute('include-html');
+        fetch(file)
+            .then(resp => resp.text())
+            .then(data => {
+                el.innerHTML = data;
+                el.removeAttribute('include-html');
+                // recursief zoeken naar nieuwe includes (nested)
+                includeHTML(() => {
+                    left--;
+                    if (left === 0 && typeof callback === 'function') callback();
+                });
+            });
+    });
+}
+// Roep na includen initPage aan
+includeHTML(function() {
+    if (typeof initPage === 'function') {
+        initPage();
+    }
+});
