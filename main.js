@@ -1,5 +1,5 @@
 // Zet current standaard op 0 zodat section0 altijd als eerste verschijnt
-let = 0;
+let current = 0;
 const max = 5;
 let isTransitioning = false;
 function updateIndicators(target) {
@@ -57,13 +57,14 @@ function slideToSection(target) {
         isTransitioning = false;
     }, 500); // css transition-duur
 }
-// Let op: deze listeners moet je ALTIJD toevoegen OOK als je initPage pas na includes uitvoert
+// Scrollen met muis
 window.addEventListener('wheel', function (e) {
     if (isTransitioning) { e.preventDefault(); return; }
     if (e.deltaY > 0 && current < max) slideToSection(current + 1);
     else if (e.deltaY < 0 && current > 0) slideToSection(current - 1);
     e.preventDefault();
 }, { passive: false });
+// Pijltjestoetsen
 window.addEventListener('keydown', function (e) {
     if (isTransitioning) { e.preventDefault(); return; }
     if (e.key === 'ArrowDown' && current < max) {
@@ -74,6 +75,41 @@ window.addEventListener('keydown', function (e) {
         e.preventDefault();
     }
 });
+// Swipe functionaliteit mobiel - alleen op .slider-container
+function addTouchSwipeListener() {
+    const slider = document.querySelector('.slider-container');
+    let touchStartY = null;
+    let touchEndY = null;
+    const swipeThreshold = 50;
+    if (!slider) return;
+    slider.addEventListener('touchstart', function (e) {
+        if (e.touches.length === 1) {
+            touchStartY = e.touches[0].clientY;
+            touchEndY = null;
+        }
+    }, { passive: true });
+    slider.addEventListener('touchmove', function (e) {
+        if (e.touches.length === 1) {
+            touchEndY = e.touches[0].clientY;
+        }
+    }, { passive: true });
+    slider.addEventListener('touchend', function () {
+        if (touchStartY !== null && touchEndY !== null && !isTransitioning) {
+            const deltaY = touchEndY - touchStartY;
+            if (Math.abs(deltaY) > swipeThreshold) {
+                if (deltaY > 0 && current > 0) {
+                    // Swipe omlaag
+                    slideToSection(current - 1);
+                } else if (deltaY < 0 && current < max) {
+                    // Swipe omhoog
+                    slideToSection(current + 1);
+                }
+            }
+        }
+        touchStartY = null;
+        touchEndY = null;
+    }, { passive: true });
+}
 // Init-functie die PAS wordt aangeroepen als alle includes klaar zijn!
 function initPage() {
     current = 0;
@@ -99,37 +135,7 @@ function initPage() {
         document.getElementById('topbar-link' + i)?.addEventListener('click', () => slideToSection(i));
     }
     document.getElementById('logo-click')?.addEventListener('click', () => slideToSection(0));
-    // --- Swipe functionaliteit voor mobiel ---
-    let touchStartY = null;
-    let touchEndY = null;
-    const swipeThreshold = 60; // minimaal aantal pixels voor swipe
-    document.addEventListener('touchstart', function(e) {
-        if (e.touches.length === 1) {
-            touchStartY = e.touches[0].clientY;
-        }
-    }, {passive: true});
-    document.addEventListener('touchmove', function(e) {
-        if (e.touches.length === 1) {
-            touchEndY = e.touches[0].clientY;
-        }
-    }, {passive: true});
-    document.addEventListener('touchend', function(e) {
-        if (touchStartY !== null && touchEndY !== null && !isTransitioning) {
-            const deltaY = touchEndY - touchStartY;
-            if (Math.abs(deltaY) > swipeThreshold) {
-                if (deltaY > 0 && current > 0) {
-                    // Swipe omlaag: vorige sectie
-                    slideToSection(current - 1);
-                }
-                if (deltaY < 0 && current < max) {
-                    // Swipe omhoog: volgende sectie
-                    slideToSection(current + 1);
-                }
-            }
-        }
-        touchStartY = null;
-        touchEndY = null;
-    }, {passive: true});
+    // Activeer swipe functionaliteit
+    addTouchSwipeListener();
 }
 // Einde main.js
-
