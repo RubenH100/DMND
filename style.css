@@ -1,10 +1,28 @@
 body {
     margin: 0;
     padding: 0;
-    background: #fff;
-    color: #000;
-    font-family: Arial, sans-serif;
+    background: #111; /* Letterbox-achtergrond buiten de geschaalde content */
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
+}
+.scaled-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1920px;    /* ontwerpbreedte: aanpassen als je andere basis wilt */
+    height: 1200px;   /* ontwerphoogte  : idem */
+    transform: translate(-50%, -50%) scale(1);
+    background: #fff;
+    box-shadow: 0 0 30px rgba(0,0,0,0.15);
+    overflow: hidden;
+}
+/* Optioneel: minimumgrootte op mobiel, voorkomt onleesbare scaling */
+@media (max-width: 480px), (max-height: 480px) {
+    .scaled-wrapper {
+        min-width: 320px;
+        min-height: 400px;
+    }
 }
 .topbar {
     position: fixed;
