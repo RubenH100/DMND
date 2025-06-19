@@ -1,6 +1,5 @@
-
 // Zet current standaard op 0 zodat section0 altijd als eerste verschijnt
-let current = 0;
+let = 0;
 const max = 5;
 let isTransitioning = false;
 function updateIndicators(target) {
@@ -100,5 +99,37 @@ function initPage() {
         document.getElementById('topbar-link' + i)?.addEventListener('click', () => slideToSection(i));
     }
     document.getElementById('logo-click')?.addEventListener('click', () => slideToSection(0));
+    // --- Swipe functionaliteit voor mobiel ---
+    let touchStartY = null;
+    let touchEndY = null;
+    const swipeThreshold = 60; // minimaal aantal pixels voor swipe
+    document.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 1) {
+            touchStartY = e.touches[0].clientY;
+        }
+    }, {passive: true});
+    document.addEventListener('touchmove', function(e) {
+        if (e.touches.length === 1) {
+            touchEndY = e.touches[0].clientY;
+        }
+    }, {passive: true});
+    document.addEventListener('touchend', function(e) {
+        if (touchStartY !== null && touchEndY !== null && !isTransitioning) {
+            const deltaY = touchEndY - touchStartY;
+            if (Math.abs(deltaY) > swipeThreshold) {
+                if (deltaY > 0 && current > 0) {
+                    // Swipe omlaag: vorige sectie
+                    slideToSection(current - 1);
+                }
+                if (deltaY < 0 && current < max) {
+                    // Swipe omhoog: volgende sectie
+                    slideToSection(current + 1);
+                }
+            }
+        }
+        touchStartY = null;
+        touchEndY = null;
+    }, {passive: true});
 }
+// Einde main.js
 
